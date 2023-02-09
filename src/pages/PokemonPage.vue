@@ -1,11 +1,12 @@
 <template>
-    <div class="relative top-0">
+    <h1 v-if="!rightPoke" class="text-2xl">Loading...</h1>
+    <div v-else class="relative top-0">
         <h2 class="font-bold text-2xl font-mono">What Pokemon is this?</h2>
 
-        <PokemonPicture v-if="rightPoke" :pokemonId="rightPoke" :showPokemon="true" />
-        <PokemonOptions :options="options" />
+        <PokemonPicture :pokemonId="rightPoke" :showPokemon="showPokemon" />
+        <PokemonOptions :options="options" @pokemonSelected="pokemonSelected($event)" />
 
-        <!-- TODO: conform button -->
+        <button class="mt-4" @click="newGame()">Next Pokemon</button>
 
     </div>
 </template>
@@ -29,6 +30,8 @@ export default {
 
         const options = ref(new Array(4))
         const rightPoke = ref(null)
+        const rightPokeName = ref('')
+        const showPokemon = ref(false)
 
         //Methods
         const getPokemonsNames = async () => {
@@ -36,12 +39,13 @@ export default {
             let rdm = getRandomBetween(1, 600)
             const { data } = await pokemonApi.get(`/${rdm}`)
             rightPoke.value = data.id
+            rightPokeName.value = data.name
 
             rdm =  getRandomBetween(0, 3)
             options.value[rdm] = data.name
 
-            console.log(data)
-            console.log(options.value)
+            // console.log(data)
+            // console.log(options.value)
 
             //getting wrongs pokemons names
             const resp = await pokemonApi.get()
@@ -63,11 +67,14 @@ export default {
         }
 
         const initGame = async () => {
+            rightPoke.value = null
+            showPokemon.value = false
+            rightPokeName.value = ''
             getPokemonsNames()
         }
 
         onMounted(async () => {
-            console.log(`the component is now mounted.`)
+            // console.log(`the component is now mounted.`)
             await initGame()
         })
 
@@ -75,7 +82,21 @@ export default {
 
         return {
             options,
-            rightPoke
+            rightPoke,
+            showPokemon,
+
+            pokemonSelected: (item) => {
+                if(item == rightPokeName.value) {
+                    showPokemon.value = true
+                    alert('Correcto!!!')
+                } else {
+                    alert('Mal')
+                }
+            },
+
+            newGame: () => {
+                initGame()
+            }
         }
     }
 }
