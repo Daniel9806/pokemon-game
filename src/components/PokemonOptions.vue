@@ -1,8 +1,9 @@
 <template>
     <div class="mt-5">
        <ul class="w-64 space-y-4 mx-auto">
-        <li v-for="item in options" 
-        class="border-gray-600 bg-gray-300 rounded-sm text-gray-700 hover:bg-gray-400">{{ item }}</li>
+        <li v-for="item in options" @click="pokemonSelected(item)" 
+        class="border-gray-600 bg-gray-300 rounded-sm text-gray-700 hover:bg-gray-400 cursor-pointer">
+        {{ item }}</li>
        </ul>
     </div>
 </template>
@@ -16,10 +17,15 @@ export default {
         }
     },
 
-    setup () {
+    setup (_, context) {
         
 
-        return {}
+
+        return {
+            pokemonSelected: (item) => {
+                context.emit('pokemonSelected', item)
+            }
+        }
     }
 }
 </script>
