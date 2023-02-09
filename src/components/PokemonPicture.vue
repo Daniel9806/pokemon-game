@@ -43,7 +43,7 @@ export default {
 
 img {
     position: absolute;
-    right: 37%;
+    right: 40%;
     height: 250px;    
 }
 
