@@ -6,7 +6,10 @@
         <PokemonPicture :pokemonId="rightPoke" :showPokemon="showPokemon" />
         <PokemonOptions :options="options" @pokemonSelected="pokemonSelected($event)" />
 
-        <button class="mt-4" @click="newGame()">Next Pokemon</button>
+        <div class="mt-4" v-if="message != ''">
+            <h3 class="text-3xl">{{ message }}</h3>
+            <button class="mt-3" @click="newGame()">Next Pokemon</button>
+        </div>
 
     </div>
 </template>
@@ -32,6 +35,7 @@ export default {
         const rightPoke = ref(null)
         const rightPokeName = ref('')
         const showPokemon = ref(false)
+        const message = ref('')
 
         //Methods
         const getPokemonsNames = async () => {
@@ -41,7 +45,7 @@ export default {
             rightPoke.value = data.id
             rightPokeName.value = data.name
 
-            rdm =  getRandomBetween(0, 3)
+            rdm = getRandomBetween(0, 3)
             options.value[rdm] = data.name
 
             // console.log(data)
@@ -56,10 +60,10 @@ export default {
                 const newPoke = wrongsPoke[rdm]
 
                 for (let j = 0; j < options.value.length; j++) {
-                  if(!options.value[j]) {
-                    options.value[j] = newPoke.name
-                    break
-                  }
+                    if (!options.value[j]) {
+                        options.value[j] = newPoke.name
+                        break
+                    }
                 }
 
             }
@@ -67,6 +71,7 @@ export default {
         }
 
         const initGame = async () => {
+            message.value = ''
             rightPoke.value = null
             showPokemon.value = false
             rightPokeName.value = ''
@@ -84,13 +89,14 @@ export default {
             options,
             rightPoke,
             showPokemon,
+            message,
 
             pokemonSelected: (item) => {
-                if(item == rightPokeName.value) {
-                    showPokemon.value = true
-                    alert('Correcto!!!')
+                showPokemon.value = true
+                if (item == rightPokeName.value) {
+                    message.value = `Correcto, es ${rightPokeName.value}`
                 } else {
-                    alert('Mal')
+                    message.value = `Upss, era ${rightPokeName.value}`
                 }
             },
 
