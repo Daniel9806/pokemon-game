@@ -3,7 +3,7 @@
         <img :src="getPokemon"
          alt="pokemon" class="brightness-0">
 
-        <img v-if="showPokemon" :src="getPokemon"
+        <img class="fade-in" v-if="showPokemon" :src="getPokemon"
          alt="pokemon">
     </div>
 </template>
